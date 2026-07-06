@@ -4,7 +4,7 @@
 
 save_path <- "D:/r studio 4.6.0/RF_Result/"
 
-# 如果文件夹不存在，则自动创建
+# 不存在这个文件夹，则自动创建
 if(!dir.exists(save_path)){
   dir.create(save_path)
 }
