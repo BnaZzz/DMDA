@@ -64,7 +64,7 @@ print(table(data2$Group))
 #=============================
 met_cols <- grep("^Metabolite", names(data2))
 
-# 列名
+# 如果你的列名不是Metabolite开头，可以注释掉下面两步
 if(length(met_cols)>0){
   
   # log2转换
@@ -479,3 +479,46 @@ ggsave(
 )
 
 cat("所有图片已保存至：\n")
+
+
+
+colnames(importance_df)
+
+# 提取变量重要性
+importance_df <- as.data.frame(importance(rf_model))
+
+# 添加变量名称
+importance_df$Variable <- rownames(importance_df)
+
+# 按MeanDecreaseGini降序排列
+importance_df <- importance_df[order(importance_df$MeanDecreaseGini,
+                                     decreasing = TRUE), ]
+
+# 添加排名
+importance_df$Rank <- 1:nrow(importance_df)
+
+# 调整列顺序
+importance_df <- importance_df[, c(
+  "Rank",
+  "Variable",
+  "MeanDecreaseGini",
+  "MeanDecreaseAccuracy",
+  "0",
+  "1"
+)]
+
+# 查看前几行
+head(importance_df)
+
+importance_metabolite <- importance_df[
+  grepl("^Metabolite", importance_df$Variable),
+]
+
+install.packages("writexl")
+
+library(writexl)
+
+write_xlsx(
+  importance_metabolite,
+  "D:/r studio 4.6.0/RF_Result/All_Metabolite_Importance.xlsx"
+)
